@@ -15,7 +15,7 @@ function App() {
 					<Route element={<ProtectedRoute />} >
 						<Route path="/dashboard" element={<Dashboard />} />
 					</Route>
-					<Route path="/" element={<Navigate to="/signin" replace/>} />
+					<Route path="/" element={<Navigate to="/dashboard" replace/>} />
 				</Routes>
 			</AuthProvider>
 		</Router>
