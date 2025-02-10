@@ -30,7 +30,6 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     const { email, password } = req.body;
-    console.log(email)
 
     try {
         const user = await User.findOne({ email });
@@ -43,7 +42,7 @@ const login = async (req, res) => {
             expiresIn: "30d",
         });
 
-        res.json({ token });
+        res.status(201).json({ message: "User logged in successfully", token });
     } catch (error) {
         res.status(500).json({ message: "Server error" });
     }
