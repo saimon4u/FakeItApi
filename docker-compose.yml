@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  mongodb:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - fakeapivolume:/data/db
+    ports:
+      - "27017:27017"
+
+  backend:
+    container_name: backend
+    build: ./backend
+    env_file:
+      - ./backend/.env.example
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - "5173:5173"
+
+volumes:
+  fakeapivolume:
+    external: true
