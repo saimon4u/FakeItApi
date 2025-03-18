@@ -10,8 +10,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
-import { AuthService } from "@/services/api"
-import { useAuth } from "@/context/AuthContext"
+import { toast } from "sonner"
+import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
 
 export function SignIn({
 	className,
@@ -20,25 +21,44 @@ export function SignIn({
 
 	const [formData, setFormData] = useState({ email: "", password: ""});
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-	const { login } = useAuth();
+	const navigate = useNavigate();
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
-		setError(null);
 	};
+
+	useEffect(() => {
+		if(localStorage.getItem("isAuthenticated") === "true"){
+			navigate("/dashboard");
+		}
+	}, [])
 
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setLoading(true);
-		setError(null);
 
 		try {
-			const res = await AuthService.login(formData);
-			await login(res.data.token);
+			const response = await fetch("http://localhost:3000/auth/login", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(formData),
+			});
+			const data = await response.json();
+			
+			if(!response.ok){
+				toast.error(data.message);
+				return;
+			};
+			
+			localStorage.setItem("accessToken", data.accessToken);
+			localStorage.setItem("isAuthenticated", "true");
+			toast.success(data.message, {description: "Welcome back!"});
+			navigate("/dashboard");
 		} catch (err: any) {
-			setError(err.response?.data?.message || "Signup failed");
+			toast.error(err.message || "Signin failed");
 		} finally {
 			setLoading(false);
 		}
@@ -70,7 +90,6 @@ export function SignIn({
 											type="email"
 											placeholder="m@example.com"
 											name="email"
-											required
 										/>
 									</div>
 									<div className="grid gap-2">
@@ -81,17 +100,15 @@ export function SignIn({
 											name="password" 
 											id="password" 
 											type="password" 
-											required 
 										/>
 									</div>
 									<Button type="submit" className="w-full" disabled={loading}>
 										{loading ? "Signing in..." : "Sign In"}
 									</Button>
-									{error && <div className="text-red-500 text-sm text-center">{error}</div>}
 								</div>
 								<div className="mt-4 text-center text-sm">
 									Don&apos;t have an account?{" "}
-									<a href="#" className="underline underline-offset-4">
+									<a href="/signup" className="underline underline-offset-4">
 										Sign up
 									</a>
 								</div>

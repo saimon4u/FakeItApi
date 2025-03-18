@@ -9,36 +9,44 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useAuth } from "@/context/AuthContext"
 import { useState } from "react"
-import { AuthService } from "@/services/api"
+import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 
 export function SignUp({
 	className,
 	...props
 }: React.ComponentPropsWithoutRef<"div">) {
 
-	const { login } = useAuth();
-	const [formData, setFormData] = useState({ email: "", username: "", password: "" , c_password: "" });
+	const [formData, setFormData] = useState({ email: "", password: "" , confirmPassword: "" });
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
+	const navigate = useNavigate();
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
-		setError(null);
 	};
 
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setLoading(true);
-		setError(null);
-
 		try {
-			const res = await AuthService.signup(formData);
-			await login(res.data.token);
+			const response = await fetch("http://localhost:3000/auth/register", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(formData),
+			});
+			const data = await response.json();
+			if(!response.ok){
+				toast.error(data.message);
+				return;
+			}
+			toast.success(data.message, {description: "Please sign in to continue"});
+			navigate("/signin");
 		} catch (err: any) {
-			setError(err.response?.data?.message || "Signup failed");
+			toast.error(err.message || "Signup failed");
 		} finally {
 			setLoading(false);
 		}
@@ -68,19 +76,6 @@ export function SignUp({
 											type="email"
 											placeholder="m@example.com"
 											name="email"
-											required
-										/>
-									</div>
-									<div className="grid gap-2">
-										<Label htmlFor="username">Username</Label>
-										<Input
-											value={formData.username}
-											onChange={handleChange}
-											id="usename"
-											type="text"
-											name="username"
-											placeholder="username"
-											required
 										/>
 									</div>
 									<div className="grid gap-2">
@@ -91,28 +86,25 @@ export function SignUp({
 											id="password" 
 											name="password"
 											type="password"
-											required
 										/>
 									</div>
 									<div className="grid gap-2">
 										<Label htmlFor="confirm-password">Confirm Password</Label>
 										<Input
-											value={formData.c_password}
+											value={formData.confirmPassword}
 											onChange={handleChange} 
-											id="c_password"
-											name="c_password" 
+											id="confirmPassword"
+											name="confirmPassword" 
 											type="password"
-											required
 										/>
 									</div>
 									<Button type="submit" className="w-full" disabled={loading}>
 										{loading ? "Signing up..." : "Sign Up"}
 									</Button>
-									{error && <p className="text-red-500 text-center text-sm">{error}</p>}
 								</div>
 								<div className="mt-4 text-center text-sm">
 									Already have an account?{" "}
-									<a href="#" className="underline underline-offset-4">
+									<a href="/signin" className="underline underline-offset-4">
 										Sign in
 									</a>
 								</div>
