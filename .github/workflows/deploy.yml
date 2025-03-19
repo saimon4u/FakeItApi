@@ -16,9 +16,9 @@ jobs:
       - name: Generate backend .env
         run: |
           echo "MONGO_URI=${{ secrets.MONGO_URI }}" > backend/.env
-          echo "PORT=${{ secrets.PORT }}" > backend/.env
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" > backend/.env
-          echo "SALT=${{ secrets.SALT }}" > backend/.env
+          echo "PORT=${{ secrets.PORT }}" >> backend/.env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> backend/.env
+          echo "SALT=${{ secrets.SALT }}" >> backend/.env
 
       - name: Generate frontend .env
         run: |
@@ -66,5 +66,5 @@ jobs:
             docker-compose down
             docker-compose up -d
             cd ~
-            #rm -rf deploy
+            rm -rf deploy
             docker image prune
