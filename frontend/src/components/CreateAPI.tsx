@@ -121,7 +121,7 @@ export function CreateAPI({ setApi, setFetchApi }: CreateApiProps) {
             <div className="w-full md:w-2/3">
                 <Card>
                     <CardHeader>
-                        <div className="text-xl font-bold">{`${BACKEND_HOST}api/${apiName.toLowerCase()}`}</div>
+                        <div className="text-md font-bold md:text-xl">{`${BACKEND_HOST}api/${apiName.toLowerCase()}`}</div>
                     </CardHeader>
                     <CardContent>
                         <div className="flex flex-col h-[80vh]">
@@ -133,7 +133,7 @@ export function CreateAPI({ setApi, setFetchApi }: CreateApiProps) {
                                 <Label htmlFor="response_size">Response Size</Label>
                                 <Input id="response_size" name="response_size" value={resonseSize} onChange={(e) => setResonseSize(e.target.value)} />
                             </div>
-                            <div className="mt-2 flex justify-between">
+                            <div className="mt-2 flex flex-col md:flex-row justify-between">
                                 <div>
                                     <Label htmlFor="http_method">Http Method</Label>
                                     <SelectMenu options={httpMethods} selectedValue={httpMethod} onChange={setHttpMethod} />
