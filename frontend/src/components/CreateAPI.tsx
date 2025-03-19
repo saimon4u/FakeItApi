@@ -133,7 +133,7 @@ export function CreateAPI({ setApi, setFetchApi }: CreateApiProps) {
                                 <Label htmlFor="response_size">Response Size</Label>
                                 <Input id="response_size" name="response_size" value={resonseSize} onChange={(e) => setResonseSize(e.target.value)} />
                             </div>
-                            <div className="mt-2 flex flex-col md:flex-row justify-between">
+                            <div className="mt-2 flex flex-col justify-center md:flex-row justify-between">
                                 <div>
                                     <Label htmlFor="http_method">Http Method</Label>
                                     <SelectMenu options={httpMethods} selectedValue={httpMethod} onChange={setHttpMethod} />
@@ -147,7 +147,7 @@ export function CreateAPI({ setApi, setFetchApi }: CreateApiProps) {
                                 <Label htmlFor="schema">Schema</Label>
                                 {schemaType === 'Manual' ? (
                                     <div>
-                                        <div className="overflow-y-auto h-[50vh] p-2 flex flex-col items-center"
+                                        <div className="overflow-y-auto h-[40vh] p-2 flex flex-col items-center"
                                             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                                             <Button onClick={addField} className="m-4 w-[50%]">+ Add Field</Button>
                                             {fields.map((field, index) => (
