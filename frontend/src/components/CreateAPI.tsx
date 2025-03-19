@@ -3,7 +3,7 @@ import { Input } from "./ui/input"
 import { Card, CardContent, CardHeader } from "./ui/card"
 import { Label } from "./ui/label"
 import { SelectMenu } from "./SelectMenu"
-import { httpMethods, schemaTypes, dataTypes } from "@/lib/utils"
+import { httpMethods, schemaTypes, dataTypes, BACKEND_HOST } from "@/lib/utils"
 import { Button } from "./ui/button"
 import { toast } from "sonner"
 import { useNavigate } from "react-router-dom"
@@ -49,7 +49,7 @@ export function CreateAPI({ setApi, setFetchApi }: CreateApiProps) {
             return;
         }
         const token = localStorage.getItem("accessToken") || "";
-        const response = await fetch('http://localhost:3000/api/create', {
+        const response = await fetch(`${BACKEND_HOST}api/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ export function CreateAPI({ setApi, setFetchApi }: CreateApiProps) {
             return;
         }
         const token = localStorage.getItem("accessToken") || "";
-        const response = await fetch('http://localhost:3000/api/test', {
+        const response = await fetch(`${BACKEND_HOST}api/test`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ export function CreateAPI({ setApi, setFetchApi }: CreateApiProps) {
             <div className="w-full md:w-2/3">
                 <Card>
                     <CardHeader>
-                        <div className="text-xl font-bold">{`http://localhost:3000/api/${apiName.toLowerCase()}`}</div>
+                        <div className="text-xl font-bold">{`${BACKEND_HOST}api/${apiName.toLowerCase()}`}</div>
                     </CardHeader>
                     <CardContent>
                         <div className="flex flex-col h-[80vh]">
