@@ -16,12 +16,13 @@ jobs:
       - name: Generate backend .env
         run: |
           echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" > backend/.env
-          echo "BACKEND_VAR=${{ secrets.BACKEND_VAR }}" >> backend/.env
+          echo "PORT=${{ secrets.PORT }}" > backend/.env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" > backend/.env
+          echo "SALT=${{ secrets.SALT }}" > backend/.env
 
       - name: Generate frontend .env
         run: |
-          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > frontend/.env
-          echo "FRONTEND_VAR=${{ secrets.FRONTEND_VAR }}" >> frontend/.env
+          echo "VITE_BACKEND_HOST=${{ secrets.VITE_BACKEND_HOST }}" > frontend/.env
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
