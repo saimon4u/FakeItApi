@@ -66,5 +66,5 @@ jobs:
             docker-compose down
             docker-compose up -d
             cd ~
-            rm -rf deploy
+            #rm -rf deploy
             docker image prune
