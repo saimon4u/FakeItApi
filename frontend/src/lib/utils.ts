@@ -5,6 +5,8 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
 };
 
+export const BACKEND_HOST = import.meta.env.VITE_BACKEND_HOST as string;
+
 export const httpMethods = [
 	{ label: 'GET', value: 'Get' },
 	{ label: 'POST', value: 'Post' },

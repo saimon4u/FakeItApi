@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader } from "./ui/card"
 import { ClipboardCopy } from "lucide-react"
 import { useNavigate } from "react-router-dom";
+import { BACKEND_HOST } from "@/lib/utils";
 
 export interface API {
     name?: string;
@@ -32,7 +33,7 @@ export function ApiDetails({ api, setApi, setFetchApi }: APIDetailsProps) {
 
     const handleDelete = async () => {
         const token = localStorage.getItem("accessToken") || "";
-        const response = await fetch('http://localhost:3000/api/delete', {
+        const response = await fetch(`${BACKEND_HOST}api/delete`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

@@ -17,6 +17,7 @@ import {
 import { API } from "./APIDetails"
 import { toast } from "sonner"
 import { useNavigate } from "react-router-dom"
+import { BACKEND_HOST } from "@/lib/utils"
 
 interface AppSidebarProps {
   setApi?: (api: API | null) => void;
@@ -31,7 +32,7 @@ export function AppSidebar({ setApi, apis }: AppSidebarProps) {
   React.useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem('accessToken') || "";
-      const response = await fetch('http://localhost:3000/auth/user', {
+      const response = await fetch(`${BACKEND_HOST}auth/user`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

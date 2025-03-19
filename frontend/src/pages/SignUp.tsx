@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { BACKEND_HOST, cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
 	Card,
@@ -31,7 +31,7 @@ export function SignUp({
 		e.preventDefault();
 		setLoading(true);
 		try {
-			const response = await fetch("http://localhost:3000/auth/register", {
+			const response = await fetch(`${BACKEND_HOST}auth/register`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

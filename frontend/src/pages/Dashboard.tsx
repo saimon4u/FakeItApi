@@ -3,6 +3,7 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { CreateAPI } from "@/components/CreateAPI"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarProvider } from "@/components/ui/sidebar"
+import { BACKEND_HOST } from "@/lib/utils"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 export function Dashboard() {
@@ -13,7 +14,7 @@ export function Dashboard() {
 	useEffect(() => {
 		const fetchData = async () => {
 		  const token = localStorage.getItem('accessToken') || "";
-		  const response = await fetch('http://localhost:3000/api/apis', {
+		  const response = await fetch(`${BACKEND_HOST}api/apis`, {
 			method: 'GET',
 			headers: {
 			  'Content-Type': 'application/json',
