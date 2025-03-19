@@ -10,7 +10,7 @@ services:
 
   backend:
     container_name: backend
-    build: ./backend
+    image: saimon4u/fakeapi-backend:latest
     env_file:
       - ./backend/.env
     ports:
@@ -20,11 +20,11 @@ services:
 
   frontend:
     container_name: frontend
-    build: ./frontend
+    image: saimon4u/fakeapi-frontend:latest
     env_file:
       - ./frontend/.env
     ports:
-      - "5173:5173"
+      - "80:5173"
 
 volumes:
   fakeapivolume:
