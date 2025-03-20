@@ -10,9 +10,12 @@ services:
 
   backend:
     container_name: backend
-    build: ./backend
-    env_file:
-      - ./backend/.env.example
+    image: saimon4u/fakeapi-backend:latest
+    environment:
+      MONGO_URI: ${MONGO_URI}
+      PORT: ${PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      SALT: ${SALT}
     ports:
       - "3000:3000"
     depends_on:
@@ -20,10 +23,11 @@ services:
 
   frontend:
     container_name: frontend
-    build: ./frontend
+    image: saimon4u/fakeapi-frontend:latest
+    environment:
+      VITE_BACKEND_HOST: ${VITE_BACKEND_HOST}
     ports:
       - "5173:5173"
 
 volumes:
   fakeapivolume:
-    external: true
