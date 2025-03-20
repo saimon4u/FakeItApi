@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'jenkins', url: 'https://github.com/saimon4u/FakeItApi.git'
+            }
+        }
+        stage('Docker Compose Up') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'MONGO_URI', variable: 'MONGO_URI'), string(credentialsId: 'PORT', variable: 'PORT'), string(credentialsId: 'SALT', variable: 'SALT'), string(credentialsId: 'JWT_SECRET', variable: 'JWT_SECRET'), string(credentialsId: 'VITE_BACKEND_HOST', variable: 'VITE_BACKEND_HOST')]) {
+                        sh 'docker-compose down || true'
+                        sh """
+                            MONGO_URI="${MONGO_URI}" PORT="${PORT}" JWT_SECRET="${JWT_SECRET}" SALT="${SALT}" VITE_BACKEND_HOST="${VITE_BACKEND_HOST}" docker-compose up -d
+                        """
+                    }
+                }
+            }
+        }
+    }
+}
