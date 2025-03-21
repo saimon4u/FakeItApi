@@ -13,8 +13,6 @@ FROM node:20-slim
 WORKDIR /app
     
 COPY --from=frontend-builder /app .
-
-COPY .env .env
         
 EXPOSE 5173
     
