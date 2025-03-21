@@ -1,6 +1,7 @@
 import Api from "../model/Api.js";
 import jwt from "jsonwebtoken";
 import { faker } from '@faker-js/faker';
+import logger from "../logger/logger.js"
 
 const authenticateUser = (req) => {
     const token = req.headers.authorization?.split(" ")[1];
@@ -16,28 +17,34 @@ const authenticateUser = (req) => {
 
 export const createApi = async (req, res) => {
     const user = authenticateUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized" });
+    if (!user){
+        logger.error("Unauthorized access");
+        return res.status(401).json({ message: "Unauthorized" });
+    }
 
     const { name, method, schema, schemaType, responseSize } = req.body;
     if (!name || !method || !schema || !schemaType) {
+        logger.error("Missing required fields");
         return res.status(400).json({ message: "Missing required fields" });
     }
 
     const existingApi = await Api.findOne({userId: user.userId, name: name, method: method});
     if (existingApi) {
+        logger.error("API already exists with same endpoint and method.");
         return res.status(400).json({ message: "API already exists with same endpoint and method." });
     }
 
     try {
         const newApi = await new Api({ userId: user.userId, name: name, method: method, schemaType: schemaType, schema: schema, responseSize: responseSize });
         await newApi.save();
-
+        logger.info("Mock API created successfully");
         res.status(201).json({
             message: "Mock API created successfully",
             endpoint: `${req.protocol}://${req.get("host")}/api/${name}`,
             token: req.headers.authorization?.split(" ")[1],
         });
     } catch (error) {
+        logger.error(error.message);
         console.log(error);
         res.status(500).json({ message: "Error creating mock API" });
     }
@@ -47,10 +54,11 @@ export const createApi = async (req, res) => {
 export const testApi = async (req, res) => {
     const { name, method, schema, schemaType, responseSize } = req.body;
     if (!name || !method || !schema || !schemaType) {
+        logger.error("Missing required fields");
         return res.status(400).json({ message: "Missing required fields" });
     }
     const jsonSchema = await JSON.parse(schema);
-    console.log(jsonSchema);
+    logger.info("Generating mock data");
     const data = await generateMockData(jsonSchema, responseSize);
     res.status(200).json(data);
 };
@@ -119,7 +127,10 @@ const generateMockValue = async (type) => {
 
 export const getMockData = async (req, res) => {
     const user = authenticateUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized" });
+    if (!user){
+        logger.error("Unauthorized access");
+        return res.status(401).json({ message: "Unauthorized" });
+    }   
 
     const { apiName } = req.params;
     
@@ -132,12 +143,17 @@ export const getMockData = async (req, res) => {
     method = method.join("");
     try {
         const mockApi = await Api.findOne({ userId: user.userId, name: apiName, method: method });
-        if (!mockApi) return res.status(404).json({ message: "API not found" });
+        if (!mockApi){
+            logger.error("API not found");
+            return res.status(404).json({ message: "API not found" });
+        }
 
         const jsonSchema = await JSON.parse(mockApi.schema);
         const mockData = await generateMockData(jsonSchema, mockApi.responseSize);
+        logger.info("Mock data fetched successfully");
         res.status(200).json(mockData);
     } catch (error) {
+        logger.error("Error fetching mock data");
         res.status(500).json({ message: "Error fetching mock data" });
     }
 };
@@ -145,10 +161,14 @@ export const getMockData = async (req, res) => {
 
 export const getAPIs = async (req, res) => {
     const user = authenticateUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized" });
+    if (!user){
+        logger.error("Unauthorized access");
+        return res.status(401).json({ message: "Unauthorized" });
+    }
 
     const apis = await Api.find({userId: user.userId});
 
+    logger.info("APIs fetched successfully");
     return res.status(200).json({
         message: "APIs fetched successfully", 
         apis: apis.map(api => { 
@@ -168,14 +188,24 @@ export const getAPIs = async (req, res) => {
 
 export const deleteApi = async (req, res) => {
     const user = authenticateUser(req);
-    if (!user) return res.status(401).json({ message: "Unauthorized" });
+    if (!user){
+        logger.error("Unauthorized access");
+        return res.status(401).json({ message: "Unauthorized" });
+    }
 
     const {name, method} = req.body;
-    if (!name || !method) return res.status(400).json({ message: "Missing required fields" });
+    if (!name || !method){
+        logger.error("Missing required fields");
+        return res.status(400).json({ message: "Missing required fields" });
+    }
 
     const api = await Api.findOne({userId: user.userId, name: name, method: method});
-    if (!api) return res.status(404).json({ message: "API not found" });
+    if (!api){
+        logger.error("API not found");
+        return res.status(404).json({ message: "API not found" });
+    }
 
+    logger.info("API deleted successfully");
     await Api.deleteOne({userId: user.userId, name: name, method: method});
     return res.status(200).json({ message: "API deleted successfully" });
 }

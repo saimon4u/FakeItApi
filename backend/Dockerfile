@@ -12,8 +12,6 @@ WORKDIR /app
 
 COPY --from=backend-builder /app .
 
-COPY .env .env
-
 EXPOSE 3000
 
 CMD ["npm", "start"]
