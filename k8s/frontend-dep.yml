@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: saimon4u/fakeapi-monitor-frontend:latest
+        ports:
+        - containerPort: 5173
+        env:
+        - name: VITE_BACKEND_HOST
+          value: "http://localhost:8081/api/"
