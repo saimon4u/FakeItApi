@@ -49,6 +49,55 @@ Built with Node.js and React.js, and powered by **Faker.js**, this tool lets use
 
 ---
 
+### 🐳 Kubernetes Deployment (Branch: `kind-cluster`)
+
+- Fully containerized using **Docker**
+- Deployed on a **local Kind (Kubernetes in Docker)** cluster
+- K8s manifests include:
+  - Deployments & Services for frontend, backend, and MongoDB
+  - Ingress configuration for routing traffic
+  - PersistentVolumeClaim for MongoDB data persistence
+  - ConfigMaps & Secrets for environment configuration
+
+---
+
+### 📈 Monitoring & Observability (Branch: `cluster-monitoring`)
+
+- Integrated monitoring stack:
+  - **Prometheus** for scraping metrics
+  - **Grafana** for dashboard visualization
+  - **Node Exporter** for host-level metrics
+---
+
+### ⚙️ CI/CD Automation (Branch: `ci-cd-ec2`)
+
+- Automated CI/CD pipeline using **GitHub Actions**
+- Deployment target: **EC2 instance** using **Docker Compose**
+- Workflow includes:
+  1. ✅ Code checkout on push to `ci-cd-ec2`
+  2. 🧪 Run tests and lint checks for both frontend and backend
+  3. 🐳 Build Docker images for all services
+  4. 🔐 Connect to EC2 via SSH using secrets stored in GitHub
+  5. 🚀 Pull the latest code on the EC2 server
+  6. 📦 Restart the app with `docker-compose up -d --build`
+
+- **Secrets Used** (stored in GitHub repository settings):
+  - `EC2_HOST`: Public IP or domain of the EC2 instance
+  - `EC2_USER`: Username to SSH (e.g., `ubuntu`)
+  - `EC2_SSH_KEY`: Your private SSH key (as a multiline secret)
+  - `DEPLOY_PATH`: Path on EC2 where the app is deployed
+---
+
+## 🗂️ Branch Overview
+
+| Branch               | Purpose                                                      |
+|----------------------|--------------------------------------------------------------|
+| `main`               | Production-ready AWS deployment                              |
+| `kind-cluster`       | Local Kind (Kubernetes) deployment manifests                 |
+| `cluster-monitoring` | Prometheus & Grafana observability setup                     |
+| `ci-cd-ec2`          | GitHub Actions pipeline to deploy on EC2 with Docker Compose |
+
+---
 
 ## 🚀 Getting Started
 
